@@ -1,0 +1,7 @@
+{
+  "name": "GPS Workflow Automator",
+  "description": "An internal enterprise tool for Field Operators to request and track GPS installations through multiple approval tiers.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
