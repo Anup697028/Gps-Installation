@@ -11,43 +11,72 @@ export enum RequestType {
   NEW_TRIP = 'NEW_TRIP'
 }
 
+export enum GPSService {
+  FLEETX = 'Fleetx',
+  WHEELSEYE = 'Wheelseye'
+}
+
+export const GPS_SERVICE_DETAILS = {
+  [GPSService.FLEETX]: { price: 2000, refundable: true },
+  [GPSService.WHEELSEYE]: { price: 3000, refundable: false },
+};
+
 export enum RequestStatus {
-  PENDING = 'pending',
-  EDIT = 'edit',
-  APPROVED = 'approved',
-  REJECTED = 'rejected',
-  VERIFIED = 'verified', // Payment Team step
-  COMPLETED = 'completed' // Vendor Coordinator step
+  REQUEST_CREATED = 'REQUEST_CREATED',
+  PARALLEL_REVIEW = 'PARALLEL_REVIEW',
+  VENDOR_COORDINATION = 'VENDOR_COORDINATION',
+  COMPLETED = 'COMPLETED',
+  HALTED = 'HALTED'
 }
 
 export interface AuditLog {
   userId: string;
   userName: string;
   action: string;
-  statusFrom: RequestStatus | 'none';
-  statusTo: RequestStatus;
+  statusFrom: string;
+  statusTo: string;
   timestamp: string;
   notes?: string;
 }
 
-export interface GPSRequest {
-  id: string;
+export interface DriverDetail {
   vehicleNumber: string;
   driverName: string;
-  driverPhone: string;
+  driverNumber: string;
+  selectedService: GPSService;
+  reportingTime: string;
+}
+
+export interface GPSRequest {
+  id: string;
+  vehicles: { vehicleNumber: string }[];
+  city: string;
+  clientName: string;
+  driverDetails: DriverDetail[];
   status: RequestStatus;
   requestType: RequestType;
+  rhApproval: boolean;
+  paymentApproval: boolean;
+  vendorName?: string;
+  notificationTimestamp?: string;
   createdBy: string;
   createdAt: string;
   updatedAt: string;
-  regionalHeadNotes?: string;
-  paymentTeamNotes?: string;
   history: AuditLog[];
+  rejectionReason?: string | null;
+}
+
+export interface RequestStats {
+  daily: { approved: number; rejected: number; pending: number };
+  weekly: { approved: number; rejected: number; pending: number };
+  monthly: { approved: number; rejected: number; pending: number };
 }
 
 export interface Vehicle {
   id: string;
   vehicleNumber: string;
+  clientName: string;
+  city: string;
   isRegistered: boolean;
 }
 
@@ -56,4 +85,6 @@ export interface User {
   name: string;
   role: UserRole;
   email: string;
+  password?: string;
+  lastLoginDate?: string;
 }
